@@ -25,5 +25,7 @@ export default {
   margin-top: 60px;
 }
 
-/* #chat-wi */
+#chat-widget-container {
+  display: none;
+}
 </style>

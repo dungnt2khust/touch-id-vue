@@ -125,6 +125,38 @@ export default {
       // Đặt vị trí khởi tạo
       this.setPosition();
     }, 300);
+
+    let interval = setInterval(() => {
+      if (window.LiveChatWidget) {
+        [
+          'ready',
+          'new_event',
+          'form_submitted',
+          'greeting_hidden',
+          'rating_submitted',
+          'visibility_changed',
+          'greeting_displayed',
+          'availability_changed',
+          'customer_status_changed',
+          'rich_message_button_clicked',
+        ].forEach((eventName) => {
+          window.LiveChatWidget.on(eventName, (payload) => {
+            console.log(window.LiveChatWidget);
+            if (eventName == 'ready') {
+              window.LiveChatWidget.call('hide');
+              document.querySelector('#chat-widget-container').style.display =
+                'block';
+            }
+            if (payload.visibility == 'minimized') {
+              setTimeout(() => {
+                window.LiveChatWidget.call('hide');
+              }, 200);
+            }
+          });
+        });
+        clearInterval(interval);
+      }
+    }, 50);
   },
   computed: {
     GetSide() {
@@ -224,7 +256,13 @@ export default {
           window.LiveChatWidget.call('hide');
           this.isShowLiveChat = false;
         } else {
+          document.querySelector('#chat-widget-container').style.display =
+            'none';
           window.LiveChatWidget.call('maximize');
+          setTimeout(() => {
+            document.querySelector('#chat-widget-container').style.display =
+              'block';
+          }, 0);
           this.isShowLiveChat = true;
         }
       }
